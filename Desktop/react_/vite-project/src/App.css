@@ -1,0 +1,95 @@
+#root {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 2rem;
+  text-align: center;
+}
+
+input{
+  width: 40vh;
+  border-radius: 5px;
+  border : 0.5px solid #b8b8b8;
+  background-color: white;
+  outline: none;
+  color:black;
+
+  padding: 15px;
+  
+  
+}
+
+button{
+  width: 10vh;
+  height: 100%;
+  background-color : #4f70f4;
+  border-radius: 5px;
+  border-style: none;
+  
+}
+
+.editmain{
+  height: 5vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: row;
+  gap: 20px;
+}
+
+
+.Headermain{
+  display: flex;
+  flex-direction: column;
+  
+}
+
+
+.Listinput{
+  border-top-style: none;
+  border-left-style: none;
+  border-right-style: none;
+  border-radius: 0px;
+  width: 53vh;
+}
+
+.Item{
+  display: flex;
+  flex-direction: row;
+  gap : 3vh;
+  justify-self: center;
+  border-bottom: 1px solid #b8b8b8;
+  width: 56vh;
+  text-align: center;
+
+  height: 5vh;
+}
+
+
+.todos_wrapper{
+  position: relative;
+  top:3vh;
+  display: flex;
+  flex-direction: column;
+  gap:50px;
+  align-items: center;
+  justify-self: center;
+
+}
+
+.Iteminput{
+  position: relative;
+  top:-10px;
+  width: 1.5vh;
+}
+
+.Itembutton{
+  width: 4vh;
+  height: 3vh;
+
+}
+
+.itemdate{
+  color:#b8b8b8;
+  font-size: 1.3vh;
+
+}
