@@ -13,7 +13,7 @@ const Lists = ({todos, onUpdate, onDelete}) => {
       if(search ==="") return todos;
 
       return todos.filter((todo)=>{
-          return todo.content.includes(search)
+          return todo.content.includes(search.toLowerCase())
       }
   )}
   const filterdTodos = getFilterData()
