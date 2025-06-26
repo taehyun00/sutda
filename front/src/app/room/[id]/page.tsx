@@ -1,7 +1,9 @@
-import { useRouter } from 'next/router';
+"use client"
+
+import { useParams } from 'next/navigation'
 import { useEffect, useState } from 'react';
 import axios from 'axios';
-import { jokbo } from "../../../jokbo";
+import { jokbo } from "../../../../jokbo";
 
 type CardType = number | string | null;
 
@@ -22,8 +24,8 @@ function getJokbo(a: CardType, b: CardType): string {
 }
 
 export default function RoomPage() {
-  const router = useRouter();
-  const { id } = router.query;
+  const params = useParams();
+  const id = params?.id as string;
   const [gameState, setGameState] = useState(null);
   const [card1, setCard1] = useState<CardType>(null);
   const [card2, setCard2] = useState<CardType>(null);
