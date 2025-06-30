@@ -19,7 +19,7 @@ const GameRoom: React.FC<GameRoomProps> = ({ roomId, playerId, playerName, onLea
 
   useEffect(() => {
     // Connect to FastAPI WebSocket
-    const wsUrl = `ws://https://port-0-studa-backend-m19egg9z76496dc6.sel4.cloudtype.app//ws`;
+    const wsUrl = `wss://port-0-studa-backend-m19egg9z76496dc6.sel4.cloudtype.app/ws`;
     console.log('Connecting to WebSocket:', wsUrl);
     const newSocket = new WebSocket(wsUrl);
 
