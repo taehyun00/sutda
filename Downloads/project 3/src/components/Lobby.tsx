@@ -11,31 +11,31 @@ const Lobby: React.FC<LobbyProps> = ({ onJoinRoom }) => {
   const [isCreating, setIsCreating] = useState(false);
 
   const handleCreateRoom = async () => {
-    if (!playerName.trim()) {
-      alert('플레이어 이름을 입력해주세요.');
-      return;
+  if (!playerName.trim()) {
+    alert('플레이어 이름을 입력해주세요.');
+    return;
+  }
+
+  try {
+    const res = await fetch('https://port-0-studa-backend-m19egg9z76496dc6.sel4.cloudtype.app/rooms', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ playerName })
+    });
+
+    const data = await res.json();
+
+    if (res.ok) {
+      const newRoomId = data.roomId;
+      onJoinRoom(newRoomId, playerName.trim());
+    } else {
+      alert(data.error || '방 생성 실패');
     }
-  
-    try {
-      const res = await fetch('https://<your-cloudtype-url>/rooms', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ playerName })
-      });
-  
-      const data = await res.json();
-  
-      if (res.ok) {
-        const newRoomId = data.roomId;
-        onJoinRoom(newRoomId, playerName.trim());
-      } else {
-        alert(data.error || '방 생성 실패');
-      }
-    } catch (error) {
-      alert('서버와 연결할 수 없습니다.');
-    }
-  };
-  
+  } catch (error) {
+    alert('서버와 연결할 수 없습니다.');
+  }
+};
+
 
   const handleJoinRoom = () => {
     if (!playerName.trim()) {
