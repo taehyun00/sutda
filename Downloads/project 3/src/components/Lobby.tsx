@@ -5,18 +5,26 @@ interface LobbyProps {
   onJoinRoom: (roomId: string, playerName: string) => void;
 }
 
+interface Room {
+  room_id: string;
+  players: string[];
+}
+
 const Lobby: React.FC<LobbyProps> = ({ onJoinRoom }) => {
   const [playerName, setPlayerName] = useState('');
-  const [roomList, setRoomList] = useState<any[]>([]);
+  const [roomList, setRoomList] = useState<Room[]>([]);
+
+  const API_BASE = 'https://port-0-studa-backend-m19egg9z76496dc6.sel4.cloudtype.app';
 
   useEffect(() => {
     const fetchRooms = async () => {
       try {
-        const res = await fetch("https://port-0-studa-backend-m19egg9z76496dc6.sel4.cloudtype.app/rooms");
-        const data = await res.json();
+        const res = await fetch(`${API_BASE}/rooms`);
+        if (!res.ok) throw new Error('Failed to fetch rooms');
+        const data: Room[] = await res.json();
         setRoomList(data);
       } catch (err) {
-        console.error("방 목록 불러오기 실패", err);
+        console.error("방 목록 불러오기 실패:", err);
       }
     };
 
@@ -32,20 +40,21 @@ const Lobby: React.FC<LobbyProps> = ({ onJoinRoom }) => {
     }
 
     try {
-      const res = await fetch('https://port-0-studa-backend-m19egg9z76496dc6.sel4.cloudtype.app/rooms', {
+      const res = await fetch(`${API_BASE}/rooms`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ playerName })
+        body: JSON.stringify({ player_name: playerName.trim() }),
       });
 
       const data = await res.json();
 
-      if (res.ok && data.roomId) {
-        onJoinRoom(data.roomId, playerName.trim());
+      if (res.ok && data.room_id) {
+        onJoinRoom(data.room_id, playerName.trim());
       } else {
-        alert(data.error || '방 생성 실패');
+        alert(data.detail || '방 생성 실패');
       }
     } catch (error) {
+      console.error(error);
       alert('서버와 연결할 수 없습니다.');
     }
   };
@@ -63,9 +72,7 @@ const Lobby: React.FC<LobbyProps> = ({ onJoinRoom }) => {
 
         <div className="space-y-6">
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">
-              플레이어 이름
-            </label>
+            <label className="block text-sm font-medium text-gray-700 mb-2">플레이어 이름</label>
             <input
               type="text"
               value={playerName}
@@ -93,13 +100,13 @@ const Lobby: React.FC<LobbyProps> = ({ onJoinRoom }) => {
               ) : (
                 roomList.map((room) => (
                   <button
-                    key={room.roomId}
-                    onClick={() => onJoinRoom(room.roomId, playerName.trim())}
-                    disabled={!playerName.trim()}
+                    key={room.room_id}
+                    onClick={() => onJoinRoom(room.room_id, playerName.trim())}
+                    disabled={!playerName.trim() || room.players.length >= 2}
                     className="w-full bg-gray-100 hover:bg-gray-200 disabled:bg-gray-300 text-gray-800 font-medium py-2 px-4 rounded-lg flex justify-between items-center"
                   >
-                    <span>방 ID: {room.roomId}</span>
-                    <span>{room.playerCount}/2명</span>
+                    <span>방 ID: {room.room_id}</span>
+                    <span>{room.players.length}/2명</span>
                   </button>
                 ))
               )}
