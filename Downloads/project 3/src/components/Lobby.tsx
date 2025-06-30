@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { Users, Plus, LogIn, Gamepad2 } from 'lucide-react';
+import React, { useState, useEffect } from 'react';
+import { Users, Plus, Gamepad2 } from 'lucide-react';
 
 interface LobbyProps {
   onJoinRoom: (roomId: string, playerName: string) => void;
@@ -7,46 +7,47 @@ interface LobbyProps {
 
 const Lobby: React.FC<LobbyProps> = ({ onJoinRoom }) => {
   const [playerName, setPlayerName] = useState('');
-  const [roomId, setRoomId] = useState('');
-  const [isCreating, setIsCreating] = useState(false);
+  const [roomList, setRoomList] = useState<any[]>([]);
+
+  useEffect(() => {
+    const fetchRooms = async () => {
+      try {
+        const res = await fetch("https://port-0-studa-backend-m19egg9z76496dc6.sel4.cloudtype.app/rooms");
+        const data = await res.json();
+        setRoomList(data);
+      } catch (err) {
+        console.error("방 목록 불러오기 실패", err);
+      }
+    };
+
+    fetchRooms();
+    const interval = setInterval(fetchRooms, 3000);
+    return () => clearInterval(interval);
+  }, []);
 
   const handleCreateRoom = async () => {
-  if (!playerName.trim()) {
-    alert('플레이어 이름을 입력해주세요.');
-    return;
-  }
-
-  try {
-    const res = await fetch('https://port-0-studa-backend-m19egg9z76496dc6.sel4.cloudtype.app/rooms', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ playerName })
-    });
-
-    const data = await res.json();
-
-    if (res.ok) {
-      const newRoomId = data.roomId;
-      onJoinRoom(newRoomId, playerName.trim());
-    } else {
-      alert(data.error || '방 생성 실패');
-    }
-  } catch (error) {
-    alert('서버와 연결할 수 없습니다.');
-  }
-};
-
-
-  const handleJoinRoom = () => {
     if (!playerName.trim()) {
       alert('플레이어 이름을 입력해주세요.');
       return;
     }
-    if (!roomId.trim()) {
-      alert('방 ID를 입력해주세요.');
-      return;
+
+    try {
+      const res = await fetch('https://port-0-studa-backend-m19egg9z76496dc6.sel4.cloudtype.app/rooms', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ playerName })
+      });
+
+      const data = await res.json();
+
+      if (res.ok && data.roomId) {
+        onJoinRoom(data.roomId, playerName.trim());
+      } else {
+        alert(data.error || '방 생성 실패');
+      }
+    } catch (error) {
+      alert('서버와 연결할 수 없습니다.');
     }
-    onJoinRoom(roomId.trim().toUpperCase(), playerName.trim());
   };
 
   return (
@@ -75,42 +76,33 @@ const Lobby: React.FC<LobbyProps> = ({ onJoinRoom }) => {
             />
           </div>
 
-          <div className="space-y-4">
-            <button
-              onClick={handleCreateRoom}
-              disabled={!playerName.trim()}
-              className="w-full bg-red-600 hover:bg-red-700 disabled:bg-gray-400 text-white font-bold py-3 px-6 rounded-lg transition-colors flex items-center justify-center space-x-2"
-            >
-              <Plus className="w-5 h-5" />
-              <span>새 방 만들기</span>
-            </button>
+          <button
+            onClick={handleCreateRoom}
+            disabled={!playerName.trim()}
+            className="w-full bg-red-600 hover:bg-red-700 disabled:bg-gray-400 text-white font-bold py-3 px-6 rounded-lg transition-colors flex items-center justify-center space-x-2"
+          >
+            <Plus className="w-5 h-5" />
+            <span>새 방 만들기</span>
+          </button>
 
-            <div className="relative">
-              <div className="absolute inset-0 flex items-center">
-                <div className="w-full border-t border-gray-300" />
-              </div>
-              <div className="relative flex justify-center text-sm">
-                <span className="px-2 bg-white text-gray-500">또는</span>
-              </div>
-            </div>
-
-            <div>
-              <input
-                type="text"
-                value={roomId}
-                onChange={(e) => setRoomId(e.target.value.toUpperCase())}
-                placeholder="방 ID 입력 (예: ABC123)"
-                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-transparent transition-all mb-3"
-                maxLength={6}
-              />
-              <button
-                onClick={handleJoinRoom}
-                disabled={!playerName.trim() || !roomId.trim()}
-                className="w-full bg-blue-600 hover:bg-blue-700 disabled:bg-gray-400 text-white font-bold py-3 px-6 rounded-lg transition-colors flex items-center justify-center space-x-2"
-              >
-                <LogIn className="w-5 h-5" />
-                <span>방 참가하기</span>
-              </button>
+          <div className="pt-6">
+            <h2 className="text-lg font-semibold text-gray-800 mb-2">방 목록</h2>
+            <div className="max-h-64 overflow-y-auto space-y-2">
+              {roomList.length === 0 ? (
+                <p className="text-sm text-gray-500">현재 참가 가능한 방이 없습니다.</p>
+              ) : (
+                roomList.map((room) => (
+                  <button
+                    key={room.roomId}
+                    onClick={() => onJoinRoom(room.roomId, playerName.trim())}
+                    disabled={!playerName.trim()}
+                    className="w-full bg-gray-100 hover:bg-gray-200 disabled:bg-gray-300 text-gray-800 font-medium py-2 px-4 rounded-lg flex justify-between items-center"
+                  >
+                    <span>방 ID: {room.roomId}</span>
+                    <span>{room.playerCount}/2명</span>
+                  </button>
+                ))
+              )}
             </div>
           </div>
         </div>
