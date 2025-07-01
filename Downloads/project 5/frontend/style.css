@@ -1,0 +1,627 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  min-height: 100vh;
+  color: #333;
+}
+
+.screen {
+  display: none;
+  min-height: 100vh;
+  padding: 20px;
+}
+
+.screen.active {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.container {
+  background: rgba(255, 255, 255, 0.95);
+  padding: 40px;
+  border-radius: 20px;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+  text-align: center;
+  min-width: 400px;
+}
+
+.container.wide {
+  max-width: 1000px;
+  width: 90%;
+}
+
+h1 {
+  font-size: 2.5em;
+  margin-bottom: 30px;
+  color: #2c3e50;
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+h2 {
+  font-size: 2em;
+  margin-bottom: 20px;
+  color: #2c3e50;
+}
+
+.menu-buttons {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.btn {
+  padding: 12px 24px;
+  border: none;
+  border-radius: 8px;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.btn-primary {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+}
+
+.btn-primary:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 16px rgba(102, 126, 234, 0.4);
+}
+
+.btn-secondary {
+  background: #6c757d;
+  color: white;
+}
+
+.btn-secondary:hover {
+  background: #5a6268;
+  transform: translateY(-2px);
+}
+
+.btn-success {
+  background: #28a745;
+  color: white;
+}
+
+.btn-success:hover {
+  background: #218838;
+  transform: translateY(-2px);
+}
+
+.btn-warning {
+  background: #ffc107;
+  color: #212529;
+}
+
+.btn-warning:hover {
+  background: #e0a800;
+  transform: translateY(-2px);
+}
+
+.btn-danger {
+  background: #dc3545;
+  color: white;
+}
+
+.btn-danger:hover {
+  background: #c82333;
+  transform: translateY(-2px);
+}
+
+.form-container {
+  margin-top: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.button-group {
+  display: flex;
+  gap: 10px;
+  justify-content: center;
+}
+
+input[type="text"], input[type="password"], input[type="number"], textarea, select {
+  padding: 12px;
+  border: 2px solid #ddd;
+  border-radius: 8px;
+  font-size: 16px;
+  transition: border-color 0.3s ease;
+}
+
+input[type="text"]:focus, input[type="password"]:focus, input[type="number"]:focus, textarea:focus, select:focus {
+  outline: none;
+  border-color: #667eea;
+}
+
+textarea {
+  resize: vertical;
+  min-height: 80px;
+}
+
+.checkbox-container {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  justify-content: center;
+}
+
+.checkbox-container label {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+}
+
+/* 방 목록 스타일 */
+.room-list-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.header-buttons {
+  display: flex;
+  gap: 10px;
+}
+
+.player-name-input {
+  margin-bottom: 20px;
+}
+
+.player-name-input input {
+  width: 100%;
+  max-width: 300px;
+}
+
+#rooms-container {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 20px;
+  max-height: 60vh;
+  overflow-y: auto;
+}
+
+.room-card {
+  background: white;
+  border: 2px solid #ddd;
+  border-radius: 12px;
+  padding: 20px;
+  transition: all 0.3s ease;
+  cursor: pointer;
+}
+
+.room-card:hover {
+  border-color: #667eea;
+  box-shadow: 0 4px 12px rgba(102, 126, 234, 0.2);
+}
+
+.room-card.playing {
+  border-color: #28a745;
+  background: rgba(40, 167, 69, 0.05);
+}
+
+.room-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+.room-header h3 {
+  margin: 0;
+  color: #2c3e50;
+  font-size: 1.2em;
+}
+
+.room-status {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 0.9em;
+}
+
+.status-text {
+  padding: 2px 8px;
+  border-radius: 12px;
+  font-size: 0.8em;
+  font-weight: 600;
+}
+
+.room-card:not(.playing) .status-text {
+  background: #e3f2fd;
+  color: #1976d2;
+}
+
+.room-card.playing .status-text {
+  background: #e8f5e8;
+  color: #2e7d32;
+}
+
+.room-info {
+  margin-bottom: 15px;
+  text-align: left;
+}
+
+.room-description {
+  color: #666;
+  font-size: 0.9em;
+  margin-bottom: 10px;
+  min-height: 20px;
+}
+
+.room-details {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.9em;
+  color: #555;
+}
+
+.room-actions {
+  text-align: center;
+}
+
+.loading, .no-rooms {
+  text-align: center;
+  padding: 40px;
+  color: #666;
+  font-size: 1.1em;
+}
+
+/* 모달 스타일 */
+.modal {
+  display: none;
+  position: fixed;
+  z-index: 1000;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  align-items: center;
+  justify-content: center;
+}
+
+.modal-content {
+  background: white;
+  padding: 30px;
+  border-radius: 15px;
+  width: 90%;
+  max-width: 500px;
+  max-height: 80vh;
+  overflow-y: auto;
+}
+
+.modal-content h3 {
+  margin-bottom: 20px;
+  text-align: center;
+  color: #2c3e50;
+}
+
+/* 게임룸 스타일 */
+.game-container {
+  background: rgba(255, 255, 255, 0.95);
+  border-radius: 20px;
+  padding: 20px;
+  width: 100%;
+  max-width: 1200px;
+  min-height: 80vh;
+}
+
+.game-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+  padding: 15px;
+  background: rgba(102, 126, 234, 0.1);
+  border-radius: 10px;
+}
+
+.room-info {
+  display: flex;
+  gap: 20px;
+  font-weight: 600;
+}
+
+.room-controls {
+  display: flex;
+  gap: 10px;
+}
+
+.game-table {
+  display: grid;
+  grid-template-rows: 1fr auto 1fr;
+  height: 600px;
+  gap: 20px;
+}
+
+.players-area {
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+}
+
+#players-list {
+  display: flex;
+  gap: 20px;
+  flex-wrap: wrap;
+}
+
+.player-card {
+  background: white;
+  border: 2px solid #ddd;
+  border-radius: 10px;
+  padding: 15px;
+  min-width: 150px;
+  text-align: center;
+  transition: all 0.3s ease;
+}
+
+.player-card.current-turn {
+  border-color: #667eea;
+  box-shadow: 0 0 20px rgba(102, 126, 234, 0.3);
+}
+
+.player-card.folded {
+  opacity: 0.5;
+  background: #f8f9fa;
+}
+
+.center-area {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.pot-display {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  padding: 20px;
+  border-radius: 15px;
+  text-align: center;
+  min-width: 200px;
+}
+
+.player-area {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 20px;
+}
+
+.my-cards {
+  flex: 1;
+}
+
+#my-cards-display {
+  display: flex;
+  gap: 10px;
+  margin-top: 10px;
+}
+
+.card {
+  width: 60px;
+  height: 90px;
+  background: white;
+  border: 2px solid #333;
+  border-radius: 8px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  font-weight: bold;
+  font-size: 12px;
+  position: relative;
+}
+
+.card.pine { background: #e8f5e8; }
+.card.plum { background: #ffe8e8; }
+.card.cherry { background: #ffe8f5; }
+.card.wisteria { background: #f5e8ff; }
+.card.iris { background: #e8e8ff; }
+.card.peony { background: #e8f5ff; }
+.card.bush { background: #e8ffe8; }
+.card.pampas { background: #fff5e8; }
+.card.chrysanthemum { background: #ffffe8; }
+.card.maple { background: #ffe8e8; }
+
+.betting-controls {
+  flex: 1;
+  text-align: center;
+}
+
+.bet-buttons {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 15px;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.bet-btn {
+  padding: 10px 15px;
+  background: #f8f9fa;
+  border: 2px solid #ddd;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: 600;
+  transition: all 0.3s ease;
+}
+
+.bet-btn:hover {
+  background: #e9ecef;
+  border-color: #667eea;
+}
+
+.bet-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.bet-amount {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  align-items: center;
+}
+
+#raise-amount {
+  max-width: 150px;
+}
+
+/* 결과 화면 */
+.result-container {
+  background: rgba(255, 255, 255, 0.95);
+  padding: 40px;
+  border-radius: 20px;
+  text-align: center;
+  min-width: 500px;
+}
+
+#winner-display {
+  margin: 20px 0;
+  padding: 20px;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  border-radius: 10px;
+}
+
+#all-cards-display {
+  margin: 20px 0;
+}
+
+.player-result {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px;
+  margin: 5px 0;
+  background: #f8f9fa;
+  border-radius: 8px;
+}
+
+.player-result.winner {
+  background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
+  color: white;
+}
+
+.player-result.folded {
+  opacity: 0.6;
+}
+
+.player-cards {
+  display: flex;
+  gap: 5px;
+}
+
+/* 반응형 디자인 */
+@media (max-width: 768px) {
+  .container {
+    min-width: auto;
+    width: 95%;
+    padding: 20px;
+  }
+  
+  .game-container {
+    padding: 10px;
+  }
+  
+  .game-table {
+    height: auto;
+    grid-template-rows: auto auto auto;
+  }
+  
+  .player-area {
+    flex-direction: column;
+    gap: 15px;
+  }
+  
+  .bet-buttons {
+    gap: 5px;
+  }
+  
+  .bet-btn {
+    padding: 8px 12px;
+    font-size: 14px;
+  }
+  
+  #players-list {
+    justify-content: center;
+  }
+  
+  #rooms-container {
+    grid-template-columns: 1fr;
+  }
+  
+  .room-list-header {
+    flex-direction: column;
+    gap: 15px;
+  }
+  
+  .header-buttons {
+    justify-content: center;
+  }
+  
+  .button-group {
+    flex-direction: column;
+  }
+}
+
+/* 애니메이션 */
+@keyframes slideInUp {
+  from {
+    transform: translateY(30px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+.screen.active {
+  animation: slideInUp 0.5s ease;
+}
+
+.card {
+  animation: slideInUp 0.3s ease;
+}
+
+.player-card {
+  animation: slideInUp 0.3s ease;
+}
+
+.room-card {
+  animation: slideInUp 0.3s ease;
+}
+
+/* 스크롤바 스타일 */
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: #f1f1f1;
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #888;
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #555;
+}
